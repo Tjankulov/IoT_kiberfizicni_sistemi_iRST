@@ -1,0 +1,126 @@
+#include <Arduino.h>
+#include <WiFi.h>
+#include <WebServer.h>
+
+const char* ssid = "A1-39A3F1";
+const char* password = "nazaxa0060";
+
+// ustvarimo objekt razreda WebServer, pot 80 je prednastavljeni port za HTTP strežnik
+WebServer server(80); // objekt 'WebServer' razreda  ki bo poskušal na privzetem HTTP portu 80
+
+// niz karakterjev
+// spletno stran bomo spravili v spremenljivko 'HTML'
+// ta koda nam omogoča, da besedilo spravimo v spremenljivo
+const char HTML[] PROGMEM = R"rawliteral(
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>esp32</title>
+</head>
+<body>
+    <h1>Pozdravljen svet iz esp32, čšž-ji delujejo!</h1>
+</body>
+</html>
+)rawliteral"; // spletno stran spravimo v spremenljivko HTML
+
+const char HTML1[] PROGMEM = R"rawliteral(
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>esp32</title>
+</head>
+<body>
+    <h1>Spletna stran enojk 111111111111 !</h1>
+</body>
+</html>
+)rawliteral"; // spletno stran spravimo v spremenljivko HTML1
+
+const char HTML0[] PROGMEM = R"rawliteral(
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>esp32</title>
+</head>
+<body>
+    <h1>Spletna stran ničel 000000000000 !</h1>
+</body>
+</html>
+)rawliteral"; // spletno stran spravimo v spremenljivko HTML0
+
+
+
+void handle_root() {
+  server.send(200, "text/html; charset=UTF-8", HTML); 
+}
+
+// tu določimo, kaj se zgodi, če uporabnik vpiše
+// korenski ("root") naslov našega strežnika na esp32 modulu, (npr. http://..) - request "/1"
+void handle_1() {
+  server.send(200, "text/html; charset=UTF-8", HTML1); 
+}
+
+// tu določimo, kaj se zgodi, če uporabnik vpiše
+// korenski ("root") naslov našega strežnika na esp32 modulu, (npr. http://..) - request "/0"
+void handle_0() {
+  server.send(200, "text/html; charset=UTF-8", HTML0); 
+}
+
+void setup() {
+  // put your setup code here, to run once:
+  // tu zapišemo kodo za nastavitve, koda bo izvecena le enkrat, ko se naprava zažene:
+
+  Serial.begin(115200); // nastavimo hitrost serijske komunikacije na 115200 btiov/s
+  WiFi.begin(ssid, password); // povežemo se na WiFi omrežje z imenom "A1-39A3F1"in geslom
+
+  while (WiFi.status() != WL_CONNECTED) { // dokler se modul ne poveže na WiFi omrežje, ponavljamo zanko
+    delay(500); // počakamo 500ms preden preverimo stanje povezave znova
+    Serial.println("Povezovanje z WiFi omrežjem ..."); // izpišemo sporočilo na serijski monitor, da vidimo, da se še vedno poskuša povezati
+  }
+
+  Serial.println("Povezava z WiFi omrežjem je vzpostavljena."); // izpišemo sporočilo, ko je povezava uspešna
+  Serial.print("Moj IP naslov je: "); // spodnji ukaz bo izpisalo v isti vrstici, zato print in ne println
+  Serial.println(WiFi.localIP()); // izpišemo IP naslov, ki ga je modul dobil od WiFi omrežja
+
+  // ko se povezava vzpostavi .... naprej ...
+  // ko vpišemo IP naslov, na koncu "/", v brskalnik, tedaj strežnik na esp32 modulu dobi zahtevo "request" "/" in izvede se funkcija handle_root(), ki smo jo definirali zgoraj
+  // če je poševnica, imamo handle root
+  server.on("/", handle_root); 
+
+  // ko vpišemo IP naslov, na koncu "/1", v brskalnik, tedaj strežnik na esp32 modulu dobi zahtevo "request" "/" in izvede se funkcija handle_1(), ki smo jo definirali zgoraj
+  server.on("/1", handle_1); 
+
+  // ko vpišemo IP naslov, na koncu "/0", v brskalnik, tedaj strežnik na esp32 modulu dobi zahtevo "request" "/" in izvede se funkcija handle_0(), ki smo jo definirali zgoraj
+  server.on("/0", handle_0); 
+
+
+  // strežnik na esp32 modulu moramo še pognati, ki posluša na portu 80 in čaka na zahteve ("requests") od klientov (npr. brskalnika Chrome)
+  server.begin(); 
+
+
+  // ta del kode uporabimo kot indikator, da se je program prenesel na esp32 module, modra LED dioda bo 2x utripnila
+  pinMode(2, OUTPUT); // pin (nožica) št. 2 bo uporabljen kot digitalni izhod (na nožici 2 je povezana vgrajena LED dioda na ESP32)
+  digitalWrite(2, HIGH); // na pin 2 zapišemo visoko vrednost (LED dioda se prižge)
+  delay(250); // počakamo 250 ms
+  digitalWrite(2, LOW); // na pin 2 zapišemo visoko vrednost (LED dioda se ugasne)
+  delay(250); // počakamo 250 ms
+  digitalWrite(2, HIGH); // na pin 2 zapišemo visoko vrednost (LED dioda se prižge)
+  delay(250); // počakamo 250 ms
+  digitalWrite(2, LOW); // na pin 2 zapišemo visoko vrednost (LED dioda se ugasne)
+  delay(250); // počakamo 250 ms
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  // tu zapišemo kodo, ki se ponavljajoče izvaja, dokler je esp32 vklopljen
+
+  // preverimo, če je prišla kakšna zahteva od klienta (npr. brskalnik Chrome), in če je, jo obdelamo in pošljemo ustrezen odgovor ("response")
+  server.handleClient(); 
+}
+
+
