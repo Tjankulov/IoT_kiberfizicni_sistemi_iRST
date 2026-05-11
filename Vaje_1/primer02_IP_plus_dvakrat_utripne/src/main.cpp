@@ -2,8 +2,8 @@
 #include <WiFi.h>
 
 
-const char* ssid = "A1-39A3F1";
-const char* password = "nazaxa0060";
+const char* ssid = "...";
+const char* password = "...";
 
 void setup() {
   // put your setup code here, to run once:

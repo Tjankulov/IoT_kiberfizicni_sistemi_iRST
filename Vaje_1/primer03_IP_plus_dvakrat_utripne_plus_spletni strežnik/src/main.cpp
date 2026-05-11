@@ -2,8 +2,8 @@
 #include <WiFi.h>
 #include <WebServer.h>
 
-const char* ssid = "A1-39A3F1";
-const char* password = "nazaxa0060";
+const char* ssid = "....";
+const char* password = "....";
 
 // ustvarimo objekt razreda WebServer, pot 80 je prednastavljeni port za HTTP strežnik
 WebServer server(80); // objekt 'WebServer' razreda  ki bo poskušal na privzetem HTTP portu 80
