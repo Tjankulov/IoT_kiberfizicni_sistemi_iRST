@@ -164,11 +164,11 @@ void setup() {
   pinMode(2, OUTPUT); // pin (nožica) št. 2 bo uporabljen kot digitalni izhod (na nožici 2 je povezana vgrajena LED dioda na ESP32)
   digitalWrite(2, HIGH); // na pin 2 zapišemo visoko vrednost (LED dioda se prižge)
   delay(250); // počakamo 250 ms
-  digitalWrite(2, LOW); // na pin 2 zapišemo visoko vrednost (LED dioda se ugasne)
+  digitalWrite(2, LOW); // na pin 2 zapišemo nizko vrednost (LED dioda se ugasne)
   delay(250); // počakamo 250 ms
   digitalWrite(2, HIGH); // na pin 2 zapišemo visoko vrednost (LED dioda se prižge)
   delay(250); // počakamo 250 ms
-  digitalWrite(2, LOW); // na pin 2 zapišemo visoko vrednost (LED dioda se ugasne)
+  digitalWrite(2, LOW); // na pin 2 zapišemo nizko vrednost (LED dioda se ugasne)
   delay(250); // počakamo 250 ms
 }
 
