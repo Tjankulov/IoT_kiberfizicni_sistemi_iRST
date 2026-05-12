@@ -2,8 +2,8 @@
 #include <WiFi.h>
 #include <WebServer.h>
 
-const char* ssid = "A1-39A3F1";
-const char* password = "nazaxa0060";
+const char* ssid = "...";
+const char* password = "...";
 
 // To spodaj je 'Hello world, za IOT :) 
 

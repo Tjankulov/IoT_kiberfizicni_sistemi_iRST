@@ -2,7 +2,7 @@
 #include <WiFi.h>
 #include <WebServer.h>
 
-const char* ssid = "A1-39A3F1";
+const char* ssid = "...";
 const char* password = " ";
 
 WebServer server(80); // objekt 'WebServer' razreda ki bo poslušal na HTTP portu 80
