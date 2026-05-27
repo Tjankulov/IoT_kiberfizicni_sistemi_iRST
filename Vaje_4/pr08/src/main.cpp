@@ -2,8 +2,8 @@
 #include "WiFi.h"
 #include "WebSocketsClient.h"
 
-const char* ssid = "A1-39A3F1-EXT";
-const char* password = "nazaxa0060";
+const char* ssid = "...";
+const char* password = "...";
 
 int portNumber = 8811; // preko vrat 8811 se bo esp32 povezal na node.js strežnik
 
