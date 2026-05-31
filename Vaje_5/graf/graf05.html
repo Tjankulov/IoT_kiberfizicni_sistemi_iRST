@@ -1,0 +1,78 @@
+<!-- IZRISOVANJE GRAFA Z LEVE PROTI DESNI IN NATO DINAMIČNI PRIKAZ VREDNOSTI NA GRAFU -->
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<html>
+
+<head>
+    <title>
+        Primer z grafom
+    </title>
+</head>
+
+<body>
+    Primer z grafom
+    <br>
+    <canvas id="platno1" width="800" height="100" style="border: 1px dashed #099999;"></canvas>
+    <br>
+
+    <script type="text/javascript">
+        "use strict"; // omogočimo delo z razredi ("class")
+
+        var can1, plat1; // deklariramo dve novi spremenljivki za platno ("canvas") in kontekst ctx -> plat1
+
+        // "boilerplate" koda za platno
+        can1 = document.getElementById("platno1"); // v html delu poiščemo platno1; spremenljivka can1 sedaj predstavlja platno1
+
+        plat1 = can1.getContext("2d"); // od tu dalje delamo s spremenljivko plat1 (za izris na platnu iz id "platno1")
+
+        plat1.strokeStyle = "#ff0000"; // doloimo barvo polnila, hex oblika #RRGGBB
+        var x = new Array(); // ustvarimo novo tabelo x (polje), lahko bi zapisali tudi var x = []; -> spremenljivka tipa Array
+        var y = new Array(); // ustvarimo novo tabelo y (polje), lahko bi zapisali tudi var x = []; -> spremenljivka tipa Array
+
+        // Dodamo spremenljivko za maksimalno širino grafa
+        var maxGrafX = can1.width; // maksimum po abscisi
+        var maxGrafY = can1.height; // maksimum po ordinati
+        var časovnik; // spremenljivka časovnik, za izvedbo simulacije
+
+        for (var i = 0; i < can1.width; i++) {
+            x[i] = i; // za x zapišemo [0, 1, 2, ...], t.j. vrednost i-ja
+        }
+
+        function zanka() {
+
+            if (y.length == maxGrafX + 1) { // če je platno veliko 10 x 10 -> imamo 11 x 11 točk, zaradi tega imamo "+1" - indeksi!
+                // rezanje in dodajanje (v primeru, da je tabela vrednosti polna)
+                y.splice(0, 1); 
+                y[maxGrafX] = Math.random() 
+            }
+            else{ // če polje z vrednostmi še ni polno
+                y.push(Math.random()); // potisnemo novo vrednost v polje
+            }
+    
+            // brisanje platna
+            plat1.clearRect(0, 0, maxGrafX, maxGrafY); // zgornji dve levi koordinati pravoktnika, širina in višina - brišemo platno
+
+            // začnemo z izrisom
+            plat1.beginPath();
+
+
+            // gremo po zanki skozi vrednosti
+            for (var i = 0; i < y.length; i++) {
+                plat1.lineTo(x[i], y[i] * can1.height); // za vrednost y pomnožimo naključno vrednost z višino platna, npr. 0.25 * 100 = 25
+            }
+
+            // in prikažemo črto na platnu
+            plat1.stroke();
+
+            // po 10 ms - znova
+            časovnik = setTimeout(zanka, 10) // kličemo zanko na 10 ms
+        }
+
+        zanka();
+
+    </script>
+</body>
+
+</html>

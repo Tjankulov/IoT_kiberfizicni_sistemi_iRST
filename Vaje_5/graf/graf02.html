@@ -1,0 +1,56 @@
+<!-- PRIKAZ ČRTE NA GRAFU S POMOČJO ZANKE IN SPREMENLJIVK TIPA ARRAY -->
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<html>
+
+<head>
+    <title>
+        Primer z grafom
+    </title>
+</head>
+
+<body>
+    Primer z grafom
+    <br>
+    <canvas id="platno1" width="800" height="100" style="border: 1px dashed #099999;"></canvas>
+    <br>
+
+    <script type="text/javascript">
+        "use strict"; // omogočimo delo z razredi ("class")
+
+        var can1, plat1; // deklariramo dve novi spremenljivki za platno ("canvas") in kontekst ctx -> plat1
+
+        // "boilerplate" koda za platno
+        can1 = document.getElementById("platno1"); // v html delu poiščemo platno1; spremenljivka can1 sedaj predstavlja platno1
+
+        plat1 = can1.getContext("2d"); // od tu dalje delamo s spremenljivko plat1 (za izris na platnu iz id "platno1")
+
+        plat1.strokeStyle = "#ff0000"; // doloimo barvo polnila, hex oblika #RRGGBB
+        var x = new Array(); // ustvarimo novo tabelo x (polje), lahko bi zapisali tudi var x = []; -> spremenljivka tipa Array
+        var y = new Array(); // ustvarimo novo tabelo y (polje), lahko bi zapisali tudi var x = []; -> spremenljivka tipa Array
+
+        // Nastavimo dvoje spremenljivk s praznima argumentoma
+        x[0] = 10;
+        y[0] = 70;
+        x[1] = 110;
+        y[1] = 20;
+        x[2] = 210;
+        y[2] = 30;
+        x[3] = 310;
+        y[3] = 60;
+        x[4] = 410;
+        y[4] = 10;
+
+        plat1.beginPath();     // začetek izrisa
+
+        for (var i = 0; i < y.length; i++) {
+            plat1.lineTo(x[i], y[i]);
+        }
+
+        plat1.stroke();         // za prikaz črte na platnu
+    </script>
+</body>
+
+</html>

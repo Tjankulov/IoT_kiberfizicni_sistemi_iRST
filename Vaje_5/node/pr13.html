@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="sl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket</title>
+</head>
+
+<body>
+    <p>IoT vmesnik - WebSocket.</p>
+
+    <div id="izpis1">×</div>
+    <div id="izpis2">×</div>
+    <br>
+
+    <script>
+        "use strict";
+
+        let izpis1 = document.getElementById("izpis1"); // html element, v katerega bomo izpisovali sporočila, ki jih prejmemo iz node.js serverja preko WebSocket port 8888 povezave
+        let izpis2 = document.getElementById("izpis2");
+
+        let ws = new WebSocket("ws://192.168.1.220:8888"); // ustvarimo povezavo prek spletnega vtičnika WebSocket - povežemo se z node.js preko vrat oz. port-a 8888
+
+        ws.onmessage = function (event) { // funkcija, ki se izvede, ko prejme sporočilo iz node.js serverja preko WebSocket port 8888 povezave
+            let msg = JSON.parse(event.data); // string iz ws spravimo v JSON objekt
+            switch (msg.tipSporočila) { // glede na tip sporočila izvedemo ustrezen del kode
+                case "potenciometer":
+                    izpis1.innerHTML = event.data;
+                    izpis2.innerHTML = msg.vrednost;
+                    break;
+            };
+        };
+    </script>
+</body>
+</html>

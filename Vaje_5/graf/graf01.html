@@ -1,0 +1,40 @@
+<!-- PRIKAZ ČRTE NA GRAFU S TOČKAMI -->
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<html>
+    <head>
+        <title>
+            Primer z grafom
+        </title>
+    </head>
+    <body>
+        Primer z grafom
+        <br>
+        <canvas id="platno1" width="800" height="100" style="border: 1px dashed #099999;"></canvas>
+        <br>
+
+        <script type="text/javascript">
+            "use strict"; // omogočimo delo z razredi ("class")
+
+            var can1, plat1; // deklariramo dve novi spremenljivki za platno ("canvas") in kontekst ctx -> plat1
+            
+            // "boilerplate" koda za platno
+            can1 = document.getElementById("platno1"); // v html delu poiščemo platno1; spremenljivka can1 sedaj predstavlja platno1
+
+            plat1 = can1.getContext("2d"); // od tu dalje delamo s spremenljivko plat1 (za izris na platnu iz id "platno1")
+
+            plat1.strokeStyle = "#ff0000"; // doloimo barvo polnila, hex oblika #RRGGBB
+
+            plat1.beginPath();     // začetek izrisa
+            plat1.lineTo(10, 70);  // prva točka na platnu
+            plat1.lineTo(110, 35); // druga točna na platnu
+            plat1.lineTo(210, 50); 
+            plat1.lineTo(310, 25); 
+            plat1.lineTo(410, 45); 
+            plat1.lineTo(510, 15); 
+            plat1.stroke();         // za prikaz črte na platnu
+        </script>
+    </body>
+</html>

@@ -1,0 +1,95 @@
+<!-- GRAF ZA PRIKAZ VREDNOSTI NA STRANI KLIENTA -->
+
+<!DOCTYPE html>
+<html lang="sl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket</title>
+</head>
+
+<body>
+    <p>Pozdravljen IoT vmesnik!</p>
+
+    <div id="izpis1">×</div>
+    <div id="izpis2">×</div>
+
+    <canvas id="platno1" width="400" height="100" style="border: 1px dashed #099999;"></canvas>
+
+    <script type="text/javascript" charset="utf-8">
+        "use strict";
+        let graf1; // spremenljivka, ki bo predstavljala prvi graf (objekt razreda 'Graf')
+
+        let izpis1 = document.getElementById("izpis1"); // html element, v katerega bomo izpisovali sporočila, ki jih prejmemo iz node.js serverja preko WebSocket port 8888 povezave
+        let izpis2 = document.getElementById("izpis2");
+
+        class Graf {
+            constructor(idPlatna) {
+                // "boilerplate" koda za platno
+                this.can1 = document.getElementById(idPlatna); // v html delu poiščemo platno1; spremenljivka can1 sedaj predstavlja platno1
+
+                this.plat1 = this.can1.getContext("2d"); // od tu dalje delamo s spremenljivko plat1 (za izris na platnu iz id "platno1")
+
+                this.plat1.strokeStyle = "#ff0000"; // doloimo barvo polnila, hex oblika #RRGGBB
+                this.x = new Array(); // ustvarimo novo tabelo x (polje), lahko bi zapisali tudi var x = []; -> spremenljivka tipa Array
+                this.y = new Array(); // ustvarimo novo tabelo y (polje), lahko bi zapisali tudi var x = []; -> spremenljivka tipa Array
+
+                // Dodamo spremenljivko za maksimalno širino grafa
+                this.maxGrafX = this.can1.width; // maksimum po abscisi
+                this.maxGrafY = this.can1.height; // maksimum po ordinati
+
+                // napočnimo polje x
+                for (var i = 0; i < this.maxGrafX; i++) {
+                    this.x[i] = i; // za x zapišemo [0, 1, 2, ...], t.j. vrednost i-ja
+                }
+            }
+
+
+            dodajVrednostAliBrišiInDodaj(yVrednost) {
+                if (this.y.length == this.maxGrafX + 1) { // če je platno veliko 10 x 10 -> imamo 11 x 11 točk, zaradi tega imamo "+1" - indeksi!
+                    // rezanje in dodajanje (v primeru, da je tabela vrednosti polna)
+                    this.y.splice(0, 1);
+                    this.y[this.maxGrafX] = yVrednost;
+                }
+                else { // če polje z vrednostmi še ni polno
+                    this.y.push(yVrednost); // potisnemo novo vrednost v polje
+                }
+            }
+
+            izriši(yVrednost) {
+                this.dodajVrednostAliBrišiInDodaj(yVrednost);
+                // brisanje platna
+                this.plat1.clearRect(0, 0, this.maxGrafX, this.maxGrafY); // zgornji dve levi koordinati pravoktnika, širina in višina - brišemo platno
+
+                // začnemo z izrisom
+                this.plat1.beginPath();
+
+
+                // gremo po zanki skozi vrednosti
+                for (var i = 0; i < this.y.length; i++) {
+                    this.plat1.lineTo(this.x[i], this.maxGrafY-this.y[i]/4095 * this.maxGrafY); // za vrednost y pomnožimo naključno vrednost z višino platna, npr. 0.25 * 100 = 25
+                }
+                // in prikažemo črto na platnu
+                this.plat1.stroke();
+            }
+        }
+
+        graf1 = new Graf("platno1"); // ustvarimo 'graf1' kot objekt razreda 'Graf'
+
+        let ws = new WebSocket("ws://192.168.1.220:8888"); // ustvarimo povezavo prek spletnega vtičnika WebSocket - povežemo se z node.js preko vrat oz. port-a 8888
+
+        ws.onmessage = function (event) { // funkcija, ki se izvede, ko prejme sporočilo iz node.js serverja preko WebSocket port 8888 povezave
+            var msg = JSON.parse(event.data); // string iz ws spravimo v JSON objekt
+            switch (msg.tipSporočila) { // glede na tip sporočila izvedemo ustrezen del kode
+                case "potenciometer":
+                    izpis1.innerHTML = event.data;
+                    izpis2.innerHTML = msg.vrednost;
+                    graf1.izriši(msg.vrednost); // vrednost, ki jo dobimo iz potenciometra
+                break;
+            };
+        };
+    </script>
+</body>
+
+</html>
