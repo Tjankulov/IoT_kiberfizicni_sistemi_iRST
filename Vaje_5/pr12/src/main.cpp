@@ -32,5 +32,5 @@ void loop() {
   vrednostPotenciometra = analogRead(nozicaPotenciometra); // preberemo vrednost s potenciometrom in jo shranimo
   Serial.println(vrednostPotenciometra); // izpišemo vrednost potenciometra na serijski monitor oz. v terminal
 
-  delay(100); // na 50ms izpišemo vrednost potenciometra
+  delay(50); // na 50ms izpišemo vrednost potenciometra
 }
