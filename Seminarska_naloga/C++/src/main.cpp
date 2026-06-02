@@ -3,7 +3,7 @@
 #include <WebSocketsClient.h>
 #include <ArduinoJson.h>
 
-const char *ssid = "...";
+const char *ssid = "..."; // tukaj bo hotspot
 const char *password = "...";
 
 int portNumber = 8811;      // preko vrat 8811 se bo esp32 povezal na node.js strežnik
