@@ -3,8 +3,8 @@
 #include <WebSocketsClient.h>
 #include <ArduinoJson.h>
 
-const char *ssid = "Pixel_6717";
-const char *password = "Tadeja89";
+const char *ssid = "...";
+const char *password = "...";
 
 int portNumber = 8811;      // preko vrat 8811 se bo esp32 povezal na node.js strežnik
 WebSocketsClient webSocket; // ustvarimo objekt za delo s spletnim vtičnikom
