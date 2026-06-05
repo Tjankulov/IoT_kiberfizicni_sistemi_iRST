@@ -27,6 +27,9 @@ int vrednostFotoupornika = 0; // spremenljivka, v katero bomo shranili vrednost,
 int stanjeGlavneLed = 0;
 int stanjeAlarma = 0;
 
+unsigned long zadnjiCasAlarma = 0;  
+bool stanjeModreLed = false;  
+
 // Koda, ki se izvede ob prejemu sporočila preko spletnega vtičnika 8811
 // payload - sporočilo, ki ga dobimo s strani strežnika - npr. json
 void onWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
@@ -158,12 +161,16 @@ void loop()
     if (vrednostFotoupornika < pragSvetlobe) // in če je vrednost fotoupornika pod pragom svetlobe (glavna dioda pokvarjena, odstranjena ... ) - "odpoved" glavne LED diode
     {
       stanjeAlarma = 1; // sproži alarm
-
+      
       digitalWrite(pomoznaLedDioda, HIGH);
-      digitalWrite(modraLedDioda, HIGH);
-      delay(100);
-      digitalWrite(modraLedDioda, LOW);
-      delay(100);
+
+      unsigned long trenutniCas = millis(); // funkcija 'millis' vrne čas v milisekundah, ki je pretekel od zagona esp32
+      if (trenutniCas - zadnjiCasAlarma >= 100)  // vsake 100ms
+      {
+        zadnjiCasAlarma = trenutniCas;
+        stanjeModreLed = !stanjeModreLed;               // toggle
+        digitalWrite(modraLedDioda, stanjeModreLed);    // prižgi/ugasni
+      }
     }
     else
     {
